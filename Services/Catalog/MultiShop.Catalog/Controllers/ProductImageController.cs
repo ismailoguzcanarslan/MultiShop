@@ -18,21 +18,21 @@ namespace MultiShop.Catalog.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ProductList()
+        public async Task<IActionResult> ProductImageList()
         {
             var categories = await _productImageService.GetAllAsync();
             return Ok(categories);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> ProductDetailList(string id)
+        public async Task<IActionResult> ProductImageList(string id)
         {
             var categories = await _productImageService.GetByIdProductImageAsync(id);
             return Ok(categories);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductDetail(CreateProductImageDto createCategoryDto)
+        public async Task<IActionResult> CreateProductImage(CreateProductImageDto createCategoryDto)
         {
             await _productImageService.CreateProductImageAsync(createCategoryDto);
             return Ok();
@@ -46,7 +46,7 @@ namespace MultiShop.Catalog.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProductDetail(UpdateProductImageDto updateCategoryDto)
+        public async Task<IActionResult> UpdateProductImage(UpdateProductImageDto updateCategoryDto)
         {
             await _productImageService.UpdateProductImageAsync(updateCategoryDto);
             return Ok();
