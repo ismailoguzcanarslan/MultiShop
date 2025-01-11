@@ -14,11 +14,4 @@
     <PackageReference Include="MongoDB.Driver" Version="3.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Services\ProductImageService\" />
-    <Folder Include="Services\ProductDetailService\" />
-    <Folder Include="Services\ProductService\" />
-  </ItemGroup>
-
 </Project>

@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using MultiShop.Catalog.Dtos.CategoryDtos;
 using MultiShop.Catalog.Entities;
+using MultiShop.Catalog.Settings;
 
 namespace MultiShop.Catalog.Services.CategoryService
 {
@@ -10,35 +11,41 @@ namespace MultiShop.Catalog.Services.CategoryService
         private readonly IMongoCollection<Category> _categories;
         private readonly IMapper _mapper;
 
-        public CategoryService(IMongoCollection<Category> categories, IMapper mapper)
+        public CategoryService(IMapper mapper, IDatabaseSettings settings)
         {
-            _categories = categories;
+            var client = new MongoClient(settings.ConnectionString);
+            var database = client.GetDatabase(settings.DatabaseName);
+            _categories = database.GetCollection<Category>(settings.CategoryCollectionName); 
             _mapper = mapper;
         }
 
-        public Task CreateCategoryAsync(CreateCategoryDto categoryDto)
+        public async Task CreateCategoryAsync(CreateCategoryDto categoryDto)
         {
-            throw new NotImplementedException();
+            var category = _mapper.Map<Category>(categoryDto);
+            await _categories.InsertOneAsync(category); 
         }
 
-        public Task DeleteCategoryAsync(string id)
+        public async Task DeleteCategoryAsync(string id)
         {
-            throw new NotImplementedException();
+            await _categories.DeleteOneAsync(id);
         }
 
-        public Task<List<ResultCategoryDto>> GetAllAsync()
+        public async Task<List<ResultCategoryDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var categories = await _categories.Find(x=>true).ToListAsync();
+            return (_mapper.Map<List<ResultCategoryDto>>(categories));
         }
 
-        public Task<GetByIdCategoryDto> GetByIdCategoryAsync(string id)
+        public async Task<GetByIdCategoryDto> GetByIdCategoryAsync(string id)
         {
-            throw new NotImplementedException();
+            var category = await _categories.Find<Category>(a => a.Id == id).FirstOrDefaultAsync();
+            return _mapper.Map<GetByIdCategoryDto>(category);
         }
 
-        public Task UpdateCategoryAsync(UpdateCategoryDto categoryDto)
+        public async Task UpdateCategoryAsync(UpdateCategoryDto categoryDto)
         {
-            throw new NotImplementedException();
+            var category = _mapper.Map<Category>(categoryDto);
+            await _categories.FindOneAndReplaceAsync(a=>a.Id == category.Id, category);
         }
     }
 }
